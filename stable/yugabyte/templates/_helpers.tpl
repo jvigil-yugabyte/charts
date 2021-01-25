@@ -54,7 +54,7 @@ Create chart name and version as used by the chart label.
 {{- $domain_name := .Values.domainName -}}
   {{- range .Values.Services }}
     {{- if eq .name "yb-masters" }}
-      {{range $index := until $master_replicas }}{{if ne $index 0}},{{end}}yb-master-{{ $index }}.yb-masters.$(NAMESPACE).svc.{{ $domain_name }}:7100{{end}}
+      {{- range $index := until $master_replicas }}{{if ne $index 0}},{{end}}yb-master-{{ $index }}.yb-masters.$(NAMESPACE).svc.{{ $domain_name }}:7100{{end}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
