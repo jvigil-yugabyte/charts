@@ -258,6 +258,12 @@ spec:
           - "/bin/bash"
           - "-c"
           - |
+            /home/yugabyte/bin/k8s_preflight.py \
+              --addr={{ include "yugabyte.server_fqdn" $serviceValues }} \
+            {{- range $serviceName, $port := $serviceValues.Service.ports }}
+              --port={{ $port }} \
+            {{- end }}
+              && \
             /home/yugabyte/bin/yb-master \
               --fs_data_dirs={{ include "yugabyte.fs_data_dirs" $serviceValues }} \
               --rpc_bind_addresses={{ include "yugabyte.rpc_bind_address" $serviceValues }} \
@@ -286,6 +292,12 @@ spec:
           - "/bin/bash"
           - "-c"
           - |
+            /home/yugabyte/bin/k8s_preflight.py \
+              --addr={{ include "yugabyte.server_fqdn" $serviceValues }} \
+            {{- range $serviceName, $port := $serviceValues.Service.ports }}
+              --port={{ $port }} \
+            {{- end }}
+              && \
             /home/yugabyte/bin/yb-tserver \
               --fs_data_dirs={{ include "yugabyte.fs_data_dirs" $serviceValues }} \
               --server_broadcast_addresses={{ include "yugabyte.server_broadcast_address" $serviceValues }} \
