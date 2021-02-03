@@ -1,10 +1,4 @@
 {{/* vim: set filetype=mustache: */}}
-{{/*
-Expand the name of the chart.
-*/}}
-{{- define "yugabyte.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 43 | trimSuffix "-" -}}
-{{- end -}}
 
 {{/*
 Create a default fully qualified app name.
