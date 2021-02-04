@@ -8,7 +8,7 @@ metadata:
   name: {{ $root.Values.oldNamingStyle | ternary "yugabyte-tls-client-cert" (printf "%s-client-tls" (include "yugabyte.fullname" $root)) }}
   namespace: "{{ $root.Release.Namespace }}"
   labels:
-    {{- include "yugabyte.labels" $root | indent 4 }}
+    {{ include "indent" (dict "str" (include "yugabyte.labels" $root) "num" 4) }}
 type: Opaque
 data:
 {{- $rootCAClient := buildCustomCert $root.Values.tls.rootCA.cert $root.Values.tls.rootCA.key -}}
@@ -31,8 +31,8 @@ metadata:
   name: {{ $root.Values.oldNamingStyle | ternary (printf "%s-yugabyte-tls-cert" $service.label) (printf "%s-%s-tls-cert" (include "yugabyte.fullname" $root) $service.label) }}
   namespace: "{{ $root.Release.Namespace }}"
   labels:
-    {{- include "yugabyte.applabel" ($appLabelArgs) | indent 4 }}
-    {{- include "yugabyte.labels" $root | indent 4 }}
+    {{ include "indent" (dict "str" (include "yugabyte.applabel" $appLabelArgs) "num" 4) }}
+    {{ include "indent" (dict "str" (include "yugabyte.labels" $root) "num" 4) }}
 type: Opaque
 data:
 {{- $rootCA := buildCustomCert $root.Values.tls.rootCA.cert $root.Values.tls.rootCA.key -}}
@@ -56,8 +56,8 @@ kind: Service
 metadata:
   name: {{ $root.Values.oldNamingStyle | ternary .name (printf "%s-%s" (include "yugabyte.fullname" $root) .name) | quote }}
   labels:
-    {{- include "yugabyte.applabel" ($appLabelArgs) | indent 4 }}
-    {{- include "yugabyte.labels" $root | indent 4 }}
+    {{ include "indent" (dict "str" (include "yugabyte.applabel" $appLabelArgs) "num" 4) }}
+    {{ include "indent" (dict "str" (include "yugabyte.labels" $root) "num" 4) }}
     service-type: "headless"
 spec:
   clusterIP: None
@@ -67,7 +67,7 @@ spec:
       port: {{ $port }}
     {{- end}}
   selector:
-    {{- include "yugabyte.appselector" ($appLabelArgs) | indent 4 }}
+    {{ include "indent" (dict "str" (include "yugabyte.appselector" $appLabelArgs) "num" 4) }}
 
 {{ if $root.Values.enableLoadBalancer }}
 {{- range $endpoint :=  $root.Values.serviceEndpoints }}
@@ -80,8 +80,8 @@ metadata:
   annotations:
 {{ toYaml $endpoint.annotations | indent 4 }}
   labels:
-    {{- include "yugabyte.applabel" ($appLabelArgs) | indent 4 }}
-    {{- include "yugabyte.labels" $root | indent 4 }}
+    {{ include "indent" (dict "str" (include "yugabyte.applabel" $appLabelArgs) "num" 4) }}
+    {{ include "indent" (dict "str" (include "yugabyte.labels" $root) "num" 4) }}
 spec:
   {{ if eq $root.Release.Service "Tiller" }}
   clusterIP:
@@ -96,7 +96,7 @@ spec:
       port: {{ $port }}
     {{- end}}
   selector:
-    {{- include "yugabyte.appselector" ($appLabelArgs) | indent 4 }}
+    {{ include "indent" (dict "str" (include "yugabyte.appselector" $appLabelArgs) "num" 4) }}
   type: {{ $endpoint.type }}
 {{- end}}
 {{- end}}
@@ -109,8 +109,8 @@ metadata:
   name: {{ $root.Values.oldNamingStyle | ternary .label (printf "%s-%s" (include "yugabyte.fullname" $root) .label) | quote }}
   namespace: "{{ $root.Release.Namespace }}"
   labels:
-    {{- include "yugabyte.applabel" ($appLabelArgs) | indent 4 }}
-    {{- include "yugabyte.labels" $root | indent 4 }}
+    {{ include "indent" (dict "str" (include "yugabyte.applabel" $appLabelArgs) "num" 4) }}
+    {{ include "indent" (dict "str" (include "yugabyte.labels" $root) "num" 4) }}
 spec:
   serviceName: {{ $root.Values.oldNamingStyle | ternary .name (printf "%s-%s" (include "yugabyte.fullname" $root) .name) | quote }}
   podManagementPolicy: {{ $root.Values.PodManagementPolicy }}
@@ -128,7 +128,7 @@ spec:
         annotations:
           volume.beta.kubernetes.io/storage-class: {{ $storageInfo.storageClass }}
         labels:
-          {{- include "yugabyte.labels" $root | indent 10 }}
+          {{ include "indent" (dict "str" (include "yugabyte.labels" $root) "num" 10) }}
       spec:
         accessModes:
           - "ReadWriteOnce"
@@ -150,7 +150,7 @@ spec:
       {{ end }}
   selector:
     matchLabels:
-      {{- include "yugabyte.appselector" ($appLabelArgs) | indent 6 }}
+      {{ include "indent" (dict "str" (include "yugabyte.appselector" $appLabelArgs) "num" 6) }}
   template:
     metadata:
       {{ if $root.Values.networkAnnotation }}
@@ -158,8 +158,8 @@ spec:
 {{ toYaml $root.Values.networkAnnotation | indent 8}}
       {{ end }}
       labels:
-        {{- include "yugabyte.applabel" ($appLabelArgs) | indent 8 }}
-        {{- include "yugabyte.labels" $root | indent 8 }}
+        {{ include "indent" (dict "str" (include "yugabyte.applabel" $appLabelArgs) "num" 8) }}
+        {{ include "indent" (dict "str" (include "yugabyte.labels" $root) "num" 8) }}
     spec:
       {{- if $root.Values.Image.pullSecretName }}
       imagePullSecrets:
@@ -431,6 +431,6 @@ spec:
   maxUnavailable: {{ template "yugabyte.max_unavailable_for_quorum" $root }}
   selector:
     matchLabels:
-      {{- include "yugabyte.appselector" ($appLabelArgs) | indent 6 }}
+      {{ include "indent" (dict "str" (include "yugabyte.appselector" $appLabelArgs) "num" 6) }}
 {{- end }}
 {{- end }}
